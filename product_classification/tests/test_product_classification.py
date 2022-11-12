@@ -1,14 +1,7 @@
-import json
-from fastapi import FastAPI
 from ..app import app
-
 from fastapi.testclient import TestClient
 
-#app = FastAPI()
-
 client = TestClient(app)
-
-
 
 def test_classify_article():
     data = {"article":"EMTEC TAKE IT EASY 8 GB 100X, BIS 15 MB/S"}
