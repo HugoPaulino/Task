@@ -12,7 +12,7 @@ client = TestClient(app)
 
 def test_classify_article():
     data = {"article":"EMTEC TAKE IT EASY 8 GB 100X, BIS 15 MB/S"}
-    response = client.post("/predict_productgroup",json="EMTEC TAKE IT EASY 8 GB 100X, BIS 15 MB/S")
+    response = client.post("/predict_productgroup", params=data)
     
     assert response.status_code == 200 
     assert response.json()["text_message"] == "EMTEC TAKE IT EASY 8 GB 100X, BIS 15 MB/S"
