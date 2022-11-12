@@ -1,0 +1,51 @@
+
+services:
+  postgresdb:
+    image: postgres
+    ports:
+      - 5432:5432
+    restart: always
+    environment:
+      POSTGRES_USER: docker
+      POSTGRES_PASSWORD: docker
+      POSTGRES_DB: productdb
+    logging:
+      options:
+        max-size: 10m
+        max-file: "3"
+    volumes:
+      - ./postgres-data:/var/lib/postgresql/data
+      - ./sql/create_table.sql:/docker-entrypoint-initdb.d/create_table.sql
+      - ./sql/fill_table.sql:/docker-entrypoint-initdb.d/fill_table.sql
+      - ../data/:/opt/postgresql/data
+
+  
+  mongodb:
+    image: mongo
+    container_name: mongo
+    restart: always
+    environment: 
+      - MONGO_INITDB_ROOT_USERNAME=root 
+      - MONGO_INITDB_ROOT_PASSWORD=root
+      - MONGO_INITDB_DATABASE=productskpis_db
+      - MONGO_INITDB_USERNAME=docker
+      - MONGO_INITDB_PASSWORD=docker
+    volumes:
+      - ${PWD}/_data/mongo:/data/db
+    ports:
+      - 27017:27017
+
+  app:
+    build: ./app
+    restart: always
+    depends_on:
+      - postgresdb
+      - mongodb
+
+  admindb:
+    image: adminer
+    restart: always
+    depends_on:
+      - postgresdb
+    ports:
+      - 8080:8080
